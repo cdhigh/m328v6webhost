@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">M328V6</string>
+    <string name="notif_channel_name">串口会话</string>
+    <string name="notif_title">M328V6 电子负载上位机</string>
+    <string name="notif_text">USB / 蓝牙串口已连接，正在后台保活记录</string>
+    <string name="dialog_select_device">选择 USB / 蓝牙设备</string>
+    <string name="msg_no_usb_device">未检测到 USB OTG 或可用蓝牙设备</string>
+    <string name="section_usb">USB OTG 设备</string>
+    <string name="section_bluetooth">经典蓝牙设备 (SPP)</string>
+    <string name="section_ble">低功耗蓝牙 (BLE)</string>
+    <string name="section_actions">蓝牙操作</string>
+    <string name="msg_bt_grant_title">授予蓝牙权限</string>
+    <string name="msg_bt_grant_subtitle">Android 12+ 需授权才能扫描与连接蓝牙模块</string>
+    <string name="msg_bt_enable_title">开启手机蓝牙</string>
+    <string name="msg_bt_enable_subtitle">当前蓝牙未开启，点击请求开启</string>
+    <string name="msg_bt_settings_title">打开系统蓝牙设置</string>
+    <string name="msg_bt_settings_subtitle">配对 HC-06 / 经典蓝牙设备或管理连接</string>
+    <string name="msg_ble_scan_title">扫描附近 BLE 设备</string>
+    <string name="msg_ble_scan_subtitle">自动搜索附近的 HC-08 / JDY / KT6368A 等 BLE 模块</string>
+    <string name="msg_ble_scanning">正在扫描附近 BLE 设备…</string>
+    <string name="msg_bt_connecting">正在连接蓝牙 %1$s…</string>
+    <string name="msg_ble_connecting">正在连接 BLE %1$s…</string>
+    <string name="msg_back_confirm">再次按返回键退出（当前串口已连接）</string>
+</resources>

@@ -1,0 +1,168 @@
+name: Build Android Release APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish_release:
+        description: 'Publish as GitHub Release? (是否同时发布到 GitHub Releases)'
+        required: false
+        type: boolean
+        default: false
+      release_tag:
+        description: 'Release Tag (发布标签，例如 v1.0.0；若留空则自动生成)'
+        required: false
+        type: string
+        default: ''
+      release_notes:
+        description: 'Release Notes (更新说明/描述，可选)'
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  build-release-apk:
+    name: Build Android Release APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools platforms;android-36 build-tools;36.0.0'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
+
+      - name: Build Release APK with Gradle
+        working-directory: ./android
+        run: ./gradlew assembleRelease --stacktrace
+
+      - name: Sign Release APK
+        env:
+          SIGNING_KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+        run: |
+          RELEASE_DIR="android/app/build/outputs/apk/release"
+          
+          # Locate apksigner in PATH or Android SDK build tools
+          if command -v apksigner >/dev/null 2>&1; then
+            APKSIGNER="apksigner"
+          elif [ -n "$ANDROID_HOME" ]; then
+            APKSIGNER=$(find "$ANDROID_HOME/build-tools" -name apksigner | sort -V | tail -n 1)
+          fi
+          
+          if [ -z "$APKSIGNER" ] || [ ! -x "$APKSIGNER" ]; then
+            echo "::error::apksigner tool not found"
+            exit 1
+          fi
+          echo "Using apksigner: $APKSIGNER"
+
+          UNSIGNED_APK="$RELEASE_DIR/app-release-unsigned.apk"
+          SIGNED_APK="$RELEASE_DIR/app-release.apk"
+          FINAL_APK="$RELEASE_DIR/M328V6Host-release.apk"
+
+          if [ -f "$UNSIGNED_APK" ]; then
+            echo "Unsigned APK detected: $UNSIGNED_APK"
+            
+            # Use repository secrets if configured, otherwise auto-generate a valid self-signed key
+            if [ -n "$SIGNING_KEYSTORE_BASE64" ] && [ -n "$SIGNING_KEY_ALIAS" ] && [ -n "$SIGNING_STORE_PASSWORD" ]; then
+              echo "Signing with repository secret keystore..."
+              echo "$SIGNING_KEYSTORE_BASE64" | base64 -d > release.keystore
+              KEY_PASS="${SIGNING_KEY_PASSWORD:-$SIGNING_STORE_PASSWORD}"
+              "$APKSIGNER" sign --ks release.keystore \
+                --ks-key-alias "$SIGNING_KEY_ALIAS" \
+                --ks-pass "pass:$SIGNING_STORE_PASSWORD" \
+                --key-pass "pass:$KEY_PASS" \
+                --out "$SIGNED_APK" \
+                "$UNSIGNED_APK"
+              rm -f release.keystore
+            else
+              echo "No custom keystore secrets found. Creating a temporary self-signed keystore..."
+              keytool -genkeypair -v -keystore release.keystore -alias m328v6 \
+                -keyalg RSA -keysize 2048 -validity 10000 \
+                -storepass m328v6host -keypass m328v6host \
+                -dname "CN=M328V6Host, OU=Android, O=M328V6, L=Default, ST=Default, C=CN"
+              
+              "$APKSIGNER" sign --ks release.keystore \
+                --ks-key-alias m328v6 \
+                --ks-pass pass:m328v6host \
+                --key-pass pass:m328v6host \
+                --out "$SIGNED_APK" \
+                "$UNSIGNED_APK"
+              rm -f release.keystore
+            fi
+            
+            # Verify APK signature
+            "$APKSIGNER" verify --verbose "$SIGNED_APK"
+            cp "$SIGNED_APK" "$FINAL_APK"
+            echo "Signed APK generated successfully: $FINAL_APK"
+
+          elif [ -f "$SIGNED_APK" ]; then
+            echo "Already signed app-release.apk found."
+            cp "$SIGNED_APK" "$FINAL_APK"
+          else
+            echo "::error::No APK file found in $RELEASE_DIR"
+            ls -la "$RELEASE_DIR" || true
+            exit 1
+          fi
+
+          # Also create versioned APK filename if versionName is available
+          VERSION_NAME=$(jq -r '.elements[0].versionName // empty' "$RELEASE_DIR/output-metadata.json" 2>/dev/null || true)
+          if [ -n "$VERSION_NAME" ]; then
+            cp "$FINAL_APK" "$RELEASE_DIR/M328V6Host-v${VERSION_NAME}-release.apk"
+            echo "Created versioned APK: $RELEASE_DIR/M328V6Host-v${VERSION_NAME}-release.apk"
+          fi
+
+      - name: Upload Release APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: M328V6Host-release-apk
+          path: |
+            android/app/build/outputs/apk/release/*.apk
+            android/app/build/outputs/apk/release/output-metadata.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish GitHub Release (Optional)
+        if: ${{ inputs.publish_release }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_INPUT: ${{ inputs.release_tag }}
+          NOTES_INPUT: ${{ inputs.release_notes }}
+          RUN_NUMBER: ${{ github.run_number }}
+        run: |
+          VERSION_NAME=$(jq -r '.elements[0].versionName // empty' android/app/build/outputs/apk/release/output-metadata.json 2>/dev/null || true)
+          TAG="$TAG_INPUT"
+          if [ -z "$TAG" ]; then
+            if [ -n "$VERSION_NAME" ]; then
+              TAG="v${VERSION_NAME}"
+            else
+              TAG="v1.0.0-build.${RUN_NUMBER}"
+            fi
+          fi
+          NOTES="$NOTES_INPUT"
+          if [ -z "$NOTES" ]; then
+            NOTES="M328V6 Android Host Release ${TAG} (build #${RUN_NUMBER})"
+          fi
+          echo "Publishing release with tag: $TAG"
+          gh release create "$TAG" \
+            android/app/build/outputs/apk/release/M328V6Host-release.apk \
+            --title "Release $TAG" \
+            --notes "$NOTES"

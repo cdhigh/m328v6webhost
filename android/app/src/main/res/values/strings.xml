@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">M328V6</string>
+    <string name="notif_channel_name">Serial Session</string>
+    <string name="notif_title">M328V6 Electronic Load</string>
+    <string name="notif_text">USB / Bluetooth serial connected (background logging active)</string>
+    <string name="dialog_select_device">Select USB / Bluetooth Device</string>
+    <string name="msg_no_usb_device">No USB OTG adapter or Bluetooth device found</string>
+    <string name="section_usb">USB OTG Devices</string>
+    <string name="section_bluetooth">Classic Bluetooth (SPP)</string>
+    <string name="section_ble">Bluetooth Low Energy (BLE)</string>
+    <string name="section_actions">Bluetooth Actions</string>
+    <string name="msg_bt_grant_title">Grant Bluetooth Permissions</string>
+    <string name="msg_bt_grant_subtitle">Required on Android 12+ to scan and connect Bluetooth</string>
+    <string name="msg_bt_enable_title">Turn On Bluetooth</string>
+    <string name="msg_bt_enable_subtitle">Bluetooth adapter is currently turned off</string>
+    <string name="msg_bt_settings_title">System Bluetooth Settings</string>
+    <string name="msg_bt_settings_subtitle">Pair HC-06 / classic Bluetooth device or manage devices</string>
+    <string name="msg_ble_scan_title">Scan Nearby BLE Devices</string>
+    <string name="msg_ble_scan_subtitle">Discover nearby HC-08 / JDY / KT6368A BLE modules</string>
+    <string name="msg_ble_scanning">Scanning nearby BLE devices…</string>
+    <string name="msg_bt_connecting">Connecting Bluetooth %1$s…</string>
+    <string name="msg_ble_connecting">Connecting BLE %1$s…</string>
+    <string name="msg_back_confirm">Press Back again to exit (serial connected)</string>
+</resources>
