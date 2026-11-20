@@ -823,7 +823,7 @@
     <section class="status-strip">
       <div class="flag-group">
         <span style="color:var(--text-muted); font-weight:600;" data-i18n="liveStatus">设备实时状态:</span>
-        <span class="badge clickable" id="flag-ra" data-i18n-title="flagRaTitle" title="点击切换交流内阻测试">Ra内阻: --</span>
+        <span class="badge clickable" id="flag-ra" data-i18n-title="flagRaTitle" title="点击切换交流内阻 (AC IR) 测试">AC IR: --</span>
         <span class="badge clickable" id="flag-fine" data-i18n-title="flagFineTitle" title="点击切换电流PWM自动微调">PWM微调: --</span>
         <span class="badge" id="flag-autoload">自动带载: --</span>
         <span class="badge" id="flag-wire">线损补偿: --</span>
@@ -917,8 +917,7 @@
 
       <div class="mini-card">
         <div class="mini-head">
-          <span data-i18n="miniRd">直流内阻 Rd</span>
-          <span>DC IR</span>
+          <span data-i18n="miniRd">直流内阻 DC IR</span>
         </div>
         <div class="mini-val mono" style="color: var(--c-res)" id="val-rd">0 mΩ</div>
         <div class="mini-sub mono" id="val-rd-ohm">0.000 Ω</div>
@@ -926,8 +925,8 @@
 
       <div class="mini-card">
         <div class="mini-head">
-          <span data-i18n="miniRa">交流内阻 Ra</span>
-          <button class="btn btn-ghost btn-xs" id="btn-mini-ra-zero" data-i18n="nullBtn" data-i18n-title="nullRaTitle" title="交流内阻调零">调零</button>
+          <span data-i18n="miniRa">交流内阻 AC IR</span>
+          <button class="btn btn-ghost btn-xs" id="btn-mini-ra-zero" data-i18n="nullBtn" data-i18n-title="nullRaTitle" title="交流内阻 (AC IR) 调零">调零</button>
         </div>
         <div class="mini-val mono" style="color: var(--c-res)" id="val-ra">0 mΩ</div>
         <div class="mini-sub mono" id="val-ra-ohm">0.000 Ω</div>
@@ -1099,9 +1098,9 @@
             </div>
           </div>
           <div class="quick-grid">
-            <button class="btn btn-sm" id="btn-ra-on" disabled data-i18n="btnRaOn">开启交流内阻</button>
-            <button class="btn btn-sm" id="btn-ra-off" disabled data-i18n="btnRaOff">关闭交流内阻</button>
-            <button class="btn btn-sm" id="btn-zero-ra" disabled data-i18n="btnZeroRa">交流内阻调零</button>
+            <button class="btn btn-sm" id="btn-ra-on" disabled data-i18n="btnRaOn">开启 AC IR</button>
+            <button class="btn btn-sm" id="btn-ra-off" disabled data-i18n="btnRaOff">关闭 AC IR</button>
+            <button class="btn btn-sm" id="btn-zero-ra" disabled data-i18n="btnZeroRa">AC IR 调零</button>
             <button class="btn btn-sm" id="btn-zero-i" disabled data-i18n="btnZeroI">电流零点校准</button>
             <button class="btn btn-sm" id="btn-clear-ah" disabled data-i18n="btnClearAh">清零 Ah/Wh</button>
             <button class="btn btn-sm" id="btn-clear-time" disabled data-i18n="btnClearTime">清零时间曲线</button>
@@ -1337,7 +1336,7 @@
               <button class="ch-pill active" data-ds="1" style="--pill-color: var(--c-curr)"><span class="dot"></span><span data-i18n="chI">电流 (A)</span></button>
               <button class="ch-pill active" data-ds="2" style="--pill-color: var(--c-power)"><span class="dot"></span><span data-i18n="chP">功率 (W)</span></button>
               <button class="ch-pill" data-ds="3" style="--pill-color: var(--c-cap)"><span class="dot"></span><span data-i18n="chAh">容量 (Ah)</span></button>
-              <button class="ch-pill" data-ds="4" style="--pill-color: var(--c-res)"><span class="dot"></span><span data-i18n="chRd">内阻 Rd (mΩ)</span></button>
+              <button class="ch-pill" data-ds="4" style="--pill-color: var(--c-res)"><span class="dot"></span><span data-i18n="chRd">内阻 DC IR (mΩ)</span></button>
               <button class="ch-pill" data-ds="5" style="--pill-color: var(--c-temp)"><span class="dot"></span><span data-i18n="chT1">温度 T1 (°C)</span></button>
             </div>
             <div style="display:flex; gap:5px; align-items:center;">
@@ -1426,7 +1425,7 @@
                   <tr>
                     <th>#</th><th data-i18n="thStartTime">开始时间</th><th data-i18n="thDuration">时长</th><th data-i18n="thMode">模式</th>
                     <th data-i18n="thStartEndV">起/止电压(V)</th><th data-i18n="thAvgV">均压(V)</th><th data-i18n="thRelAh">释放容量(Ah)</th>
-                    <th data-i18n="thRelWh">释放能量(Wh)</th><th data-i18n="thPeakRdRa">峰值Rd/Ra(mΩ)</th><th data-i18n="thEndTemp">结束温度</th>
+                    <th data-i18n="thRelWh">释放能量(Wh)</th><th data-i18n="thPeakRdRa">峰值DC/AC IR(mΩ)</th><th data-i18n="thEndTemp">结束温度</th>
                   </tr>
                 </thead>
                 <tbody id="sessions-tbody" class="mono">
@@ -1443,7 +1442,7 @@
                   <tr>
                     <th data-i18n="thTime">时间</th><th data-i18n="thState">状态</th><th data-i18n="thVolt">电压(V)</th><th data-i18n="thCurr">电流(A)</th>
                     <th data-i18n="thPower">功率(W)</th><th data-i18n="thCap">容量(Ah)</th><th data-i18n="thEnergy">能量(Wh)</th>
-                    <th>Rd(mΩ)</th><th>Ra(mΩ)</th><th>T1/T2(°C)</th>
+                    <th data-i18n="thDcIr">DC IR(mΩ)</th><th data-i18n="thAcIr">AC IR(mΩ)</th><th>T1/T2(°C)</th>
                   </tr>
                 </thead>
                 <tbody id="records-tbody" class="mono">
@@ -1593,10 +1592,10 @@
         protoV1: '兼容协议 V1',
 
         liveStatus: '设备实时状态:',
-        flagRaTitle: '点击切换交流内阻测试',
+        flagRaTitle: '点击切换交流内阻 (AC IR) 测试',
         flagFineTitle: '点击切换电流PWM自动微调',
         flagLimitsTitle: '从下位机 EEPROM 读取的真实硬件安全上限',
-        flagRaLbl: 'Ra内阻',
+        flagRaLbl: 'AC IR',
         flagFineLbl: 'PWM微调',
         flagAutoLoadOn: '自动带载: ON{v}',
         flagAutoLoadOff: '自动带载: OFF',
@@ -1652,15 +1651,15 @@
 
         miniAh: '累计容量 Ah',
         miniWh: '累计能量 Wh',
-        miniRd: '直流内阻 Rd',
-        miniRa: '交流内阻 Ra',
+        miniRd: '直流内阻 DC IR',
+        miniRa: '交流内阻 AC IR',
         miniT1: '散热器温度 T1',
         miniTimer: '预约 / 周期定时',
         clearZeroBtn: '清零',
         clearBtn: '清空',
         clearAhTitle: '清零 Ah/Wh',
         nullBtn: '调零',
-        nullRaTitle: '交流内阻调零',
+        nullRaTitle: '交流内阻 (AC IR) 调零',
         queryBtn: '查询',
         queryTimerTitle: '查询下位机定时状态',
         avgVVal: '均压: {v} V',
@@ -1699,9 +1698,9 @@
         psuHintBody: '切入后不自动启动带载。请先设定上方的<strong>截止电压 Vset</strong>（压降保护门限）与<strong>最大电流 Iset</strong>（测试上限），再点击「启动放电」开始逐步加大电流；跌破截止电压或达上限时自动停机并在下位机保留最大电流/功率读数。',
 
         quickOpsTitle: '设备快捷操作与调零',
-        btnRaOn: '开启交流内阻',
-        btnRaOff: '关闭交流内阻',
-        btnZeroRa: '交流内阻调零',
+        btnRaOn: '开启 AC IR',
+        btnRaOff: '关闭 AC IR',
+        btnZeroRa: 'AC IR 调零',
         btnZeroI: '电流零点校准',
         btnClearAh: '清零 Ah/Wh',
         btnClearTime: '清零时间曲线',
@@ -1803,13 +1802,13 @@
         chI: '电流 (A)',
         chP: '功率 (W)',
         chAh: '容量 (Ah)',
-        chRd: '内阻 Rd (mΩ)',
+        chRd: '内阻 DC IR (mΩ)',
         chT1: '温度 T1 (°C)',
         chLblV: '电压(V)',
         chLblI: '电流(A)',
         chLblP: '功率(W)',
         chLblAh: '容量(Ah)',
-        chLblRd: '内阻Rd(mΩ)',
+        chLblRd: 'DC IR(mΩ)',
         chLblT1: '温度T1(°C)',
         lblWindow: '窗口:',
         winAll: '全部时间',
@@ -1849,7 +1848,7 @@
         thAvgV: '均压(V)',
         thRelAh: '释放容量(Ah)',
         thRelWh: '释放能量(Wh)',
-        thPeakRdRa: '峰值Rd/Ra(mΩ)',
+        thPeakRdRa: '峰值DC/AC IR(mΩ)',
         thEndTemp: '结束温度',
         sessionsEmpty: '暂无放电统计记录（设备从 OFF → ON → OFF 时自动汇总）',
 
@@ -1860,6 +1859,8 @@
         thPower: '功率(W)',
         thCap: '容量(Ah)',
         thEnergy: '能量(Wh)',
+        thDcIr: 'DC IR(mΩ)',
+        thAcIr: 'AC IR(mΩ)',
         recordsEmpty: '暂无采样数据',
 
         // Command labels
@@ -1873,10 +1874,10 @@
         cmdModeCR: '切换 CR 恒阻 {r}Ω',
         cmdModeCP: '切换 CP 恒功率 {p}W',
         cmdModePSU: '切换 PSU 电源测试',
-        cmdRaOn: '开启交流内阻',
-        cmdRaOff: '关闭交流内阻',
+        cmdRaOn: '开启 AC IR',
+        cmdRaOff: '关闭 AC IR',
         cmdClearAh: '清零 Ah/Wh',
-        cmdZeroRa: 'Ra 调零',
+        cmdZeroRa: 'AC IR 调零',
         cmdZeroI: '电流调零',
         cmdClearTime: '清零时间与曲线',
         cmdSyncTime: '同步电脑时间 {t}',
@@ -1952,8 +1953,8 @@
         toastNoExportData: '没有可导出的数据',
         xlsxSheetData: 'M328V6采样数据',
         xlsxSheetSess: '放电统计摘要',
-        xlsxDataCols: '序号,时间,状态,电压(V),电流(A),功率(W),容量(Ah),能量(Wh),Rd(mΩ),Ra(mΩ),T1(°C),T2(°C)',
-        xlsxSessCols: '编号,开始时间,时长,模式,起始电压(V),结束电压(V),均压(V),容量(Ah),能量(Wh),峰值Rd(mΩ),峰值Ra(mΩ)',
+        xlsxDataCols: '序号,时间,状态,电压(V),电流(A),功率(W),容量(Ah),能量(Wh),DC IR(mΩ),AC IR(mΩ),T1(°C),T2(°C)',
+        xlsxSessCols: '编号,开始时间,时长,模式,起始电压(V),结束电压(V),均压(V),容量(Ah),能量(Wh),峰值DC IR(mΩ),峰值AC IR(mΩ)',
         logExportXlsx: '已离线导出标准 Excel (.xlsx · {n} 条记录)',
         toastExportXlsx: 'Excel (.xlsx) 导出成功',
         toastExportCsv: 'CSV 导出成功',
@@ -2062,10 +2063,10 @@
         protoV1: 'Legacy V1',
 
         liveStatus: 'Live Status:',
-        flagRaTitle: 'Click to toggle AC IR (Ra) measurement',
+        flagRaTitle: 'Click to toggle AC IR measurement',
         flagFineTitle: 'Click to toggle PWM fine current trim',
         flagLimitsTitle: 'Hardware safety limits read from device EEPROM',
-        flagRaLbl: 'Ra',
+        flagRaLbl: 'AC IR',
         flagFineLbl: 'PWM Trim',
         flagAutoLoadOn: 'Auto-Trig: ON{v}',
         flagAutoLoadOff: 'Auto-Trig: OFF',
@@ -2121,15 +2122,15 @@
 
         miniAh: 'Capacity Ah',
         miniWh: 'Energy Wh',
-        miniRd: 'DC IR (Rd)',
-        miniRa: 'AC IR (Ra)',
+        miniRd: 'DC IR',
+        miniRa: 'AC IR',
         miniT1: 'Heatsink T1',
         miniTimer: 'Delay / Cycle',
         clearZeroBtn: 'Clear',
         clearBtn: 'Clear',
         clearAhTitle: 'Clear Ah/Wh',
         nullBtn: 'Null',
-        nullRaTitle: 'Null AC IR (Ra) offset',
+        nullRaTitle: 'Null AC IR offset',
         queryBtn: 'Read',
         queryTimerTitle: 'Query device timers',
         avgVVal: 'Avg V: {v} V',
@@ -2168,9 +2169,9 @@
         psuHintBody: 'Switching does not auto-start load. Set <strong>Cutoff Vset</strong> (voltage drop limit) and <strong>Max Iset</strong> (current cap) above, then click "Start Load" to ramp current; auto-stops on cutoff/limit and holds peak I/P on device.',
 
         quickOpsTitle: 'Quick Actions & Zeroing',
-        btnRaOn: 'Ra On',
-        btnRaOff: 'Ra Off',
-        btnZeroRa: 'Null Ra',
+        btnRaOn: 'AC IR On',
+        btnRaOff: 'AC IR Off',
+        btnZeroRa: 'Null AC IR',
         btnZeroI: 'Zero I Offset',
         btnClearAh: 'Clear Ah/Wh',
         btnClearTime: 'Reset Timer',
@@ -2272,13 +2273,13 @@
         chI: 'Current (A)',
         chP: 'Power (W)',
         chAh: 'Capacity (Ah)',
-        chRd: 'DC IR Rd (mΩ)',
+        chRd: 'DC IR (mΩ)',
         chT1: 'Temp T1 (°C)',
         chLblV: 'Volt(V)',
         chLblI: 'Curr(A)',
         chLblP: 'Power(W)',
         chLblAh: 'Cap(Ah)',
-        chLblRd: 'Rd(mΩ)',
+        chLblRd: 'DC IR(mΩ)',
         chLblT1: 'T1(°C)',
         lblWindow: 'Window:',
         winAll: 'All Time',
@@ -2318,7 +2319,7 @@
         thAvgV: 'Avg V',
         thRelAh: 'Capacity(Ah)',
         thRelWh: 'Energy(Wh)',
-        thPeakRdRa: 'Peak Rd/Ra(mΩ)',
+        thPeakRdRa: 'Peak DC/AC IR(mΩ)',
         thEndTemp: 'End Temp',
         sessionsEmpty: 'No sessions yet (auto-summarized on OFF → ON → OFF)',
 
@@ -2329,6 +2330,8 @@
         thPower: 'Power(W)',
         thCap: 'Cap(Ah)',
         thEnergy: 'Energy(Wh)',
+        thDcIr: 'DC IR(mΩ)',
+        thAcIr: 'AC IR(mΩ)',
         recordsEmpty: 'No sample data',
 
         // Command labels
@@ -2342,10 +2345,10 @@
         cmdModeCR: 'Mode CR {r}Ω',
         cmdModeCP: 'Mode CP {p}W',
         cmdModePSU: 'Mode PSU Test',
-        cmdRaOn: 'Enable AC IR (Ra)',
-        cmdRaOff: 'Disable AC IR (Ra)',
+        cmdRaOn: 'Enable AC IR',
+        cmdRaOff: 'Disable AC IR',
         cmdClearAh: 'Clear Ah/Wh',
-        cmdZeroRa: 'Null Ra',
+        cmdZeroRa: 'Null AC IR',
         cmdZeroI: 'Zero I offset',
         cmdClearTime: 'Reset timer & curve',
         cmdSyncTime: 'Sync PC time {t}',
@@ -2421,8 +2424,8 @@
         toastNoExportData: 'No data to export',
         xlsxSheetData: 'M328V6 Samples',
         xlsxSheetSess: 'Discharge Summary',
-        xlsxDataCols: 'Index,Time,State,Voltage(V),Current(A),Power(W),Capacity(Ah),Energy(Wh),Rd(mOhm),Ra(mOhm),T1(C),T2(C)',
-        xlsxSessCols: 'ID,Start Time,Duration,Mode,Start V(V),End V(V),Avg V(V),Capacity(Ah),Energy(Wh),Peak Rd(mOhm),Peak Ra(mOhm)',
+        xlsxDataCols: 'Index,Time,State,Voltage(V),Current(A),Power(W),Capacity(Ah),Energy(Wh),DC IR(mOhm),AC IR(mOhm),T1(C),T2(C)',
+        xlsxSessCols: 'ID,Start Time,Duration,Mode,Start V(V),End V(V),Avg V(V),Capacity(Ah),Energy(Wh),Peak DC IR(mOhm),Peak AC IR(mOhm)',
         logExportXlsx: 'Exported standard Excel (.xlsx · {n} rows)',
         toastExportXlsx: 'Excel (.xlsx) exported',
         toastExportCsv: 'CSV exported',
@@ -4302,7 +4305,7 @@
         if (vals[i] > max) max = vals[i];
       }
       if (!Number.isFinite(min)) return { min: 0, max: 1 };
-      // Distinct headroom ratios per channel so flat/constant curves (e.g. CC current vs Rd vs T1) never overlap on the exact same line
+      // Distinct headroom ratios per channel so flat/constant curves (e.g. CC current vs DC IR vs T1) never overlap on the exact same line
       const flatHeadroom = [1.22, 1.38, 1.54, 1.72, 1.90, 2.10][chIdx] || 1.4;
       if (Math.abs(max - min) < 1e-6) {
         if (max <= 0) return { min: 0, max: 1 };
@@ -4463,7 +4466,7 @@
         ctx.fillText(slice[pIdx].timeLabel, x, padTop + plotH + 8);
       }
 
-      // Clip & draw series lines in priority z-order: secondary (T1, Rd, Ah) first, primary (P, V, I) on top!
+      // Clip & draw series lines in priority z-order: secondary (T1, DC IR, Ah) first, primary (P, V, I) on top!
       ctx.save();
       ctx.beginPath();
       ctx.rect(padLeft, padTop, plotW, plotH);
@@ -4685,7 +4688,7 @@
 
     function exportCSV() {
       if (!state.points.length) { toast(t('toastNoExportData'), 'warn'); return; }
-      const header = 'Index,Time,State,Voltage(V),Current(A),Power(W),Capacity(Ah),Energy(Wh),Rd(mOhm),Ra(mOhm),T1(C),T2(C)\n';
+      const header = 'Index,Time,State,Voltage(V),Current(A),Power(W),Capacity(Ah),Energy(Wh),DC_IR(mOhm),AC_IR(mOhm),T1(C),T2(C)\n';
       const body = state.points.map((p) =>
         `${p.idx},${p.timeLabel},${p.running ? 'ON' : 'OFF'},${p.v.toFixed(3)},${p.i.toFixed(3)},${p.p.toFixed(2)},${p.ah.toFixed(3)},${p.wh.toFixed(2)},${p.rd},${p.ra},${p.t1},${p.t2}`
       ).join('\n');
