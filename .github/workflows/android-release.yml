@@ -74,9 +74,17 @@ jobs:
           fi
           echo "Using apksigner: $APKSIGNER"
 
+          # Extract versionName from output-metadata.json before cleanup
+          VERSION_NAME=$(jq -r '.elements[0].versionName // empty' "$RELEASE_DIR/output-metadata.json" 2>/dev/null || true)
+          if [ -z "$VERSION_NAME" ]; then
+            VERSION_NAME="1.0.0"
+          fi
+          echo "VERSION_NAME=$VERSION_NAME" >> "$GITHUB_ENV"
+          echo "Detected version: $VERSION_NAME"
+
           UNSIGNED_APK="$RELEASE_DIR/app-release-unsigned.apk"
           SIGNED_APK="$RELEASE_DIR/app-release.apk"
-          FINAL_APK="$RELEASE_DIR/M328V6Host-release.apk"
+          FINAL_APK="$RELEASE_DIR/M328V6Host-v${VERSION_NAME}-release.apk"
 
           if [ -f "$UNSIGNED_APK" ]; then
             echo "Unsigned APK detected: $UNSIGNED_APK"
@@ -90,7 +98,7 @@ jobs:
                 --ks-key-alias "$SIGNING_KEY_ALIAS" \
                 --ks-pass "pass:$SIGNING_STORE_PASSWORD" \
                 --key-pass "pass:$KEY_PASS" \
-                --out "$SIGNED_APK" \
+                --out "$FINAL_APK" \
                 "$UNSIGNED_APK"
               rm -f release.keystore
             else
@@ -104,39 +112,37 @@ jobs:
                 --ks-key-alias m328v6 \
                 --ks-pass pass:m328v6host \
                 --key-pass pass:m328v6host \
-                --out "$SIGNED_APK" \
+                --out "$FINAL_APK" \
                 "$UNSIGNED_APK"
               rm -f release.keystore
             fi
             
             # Verify APK signature
-            "$APKSIGNER" verify --verbose "$SIGNED_APK"
-            cp "$SIGNED_APK" "$FINAL_APK"
+            "$APKSIGNER" verify --verbose "$FINAL_APK"
             echo "Signed APK generated successfully: $FINAL_APK"
 
           elif [ -f "$SIGNED_APK" ]; then
             echo "Already signed app-release.apk found."
             cp "$SIGNED_APK" "$FINAL_APK"
+            "$APKSIGNER" verify --verbose "$FINAL_APK"
           else
             echo "::error::No APK file found in $RELEASE_DIR"
             ls -la "$RELEASE_DIR" || true
             exit 1
           fi
 
-          # Also create versioned APK filename if versionName is available
-          VERSION_NAME=$(jq -r '.elements[0].versionName // empty' "$RELEASE_DIR/output-metadata.json" 2>/dev/null || true)
-          if [ -n "$VERSION_NAME" ]; then
-            cp "$FINAL_APK" "$RELEASE_DIR/M328V6Host-v${VERSION_NAME}-release.apk"
-            echo "Created versioned APK: $RELEASE_DIR/M328V6Host-v${VERSION_NAME}-release.apk"
-          fi
+          # Clean up unnecessary files so only the final versioned APK remains
+          rm -f "$RELEASE_DIR"/app-release*.apk
+          rm -f "$RELEASE_DIR/M328V6Host-release.apk"
+          rm -f "$RELEASE_DIR/output-metadata.json"
+          echo "Remaining files in $RELEASE_DIR:"
+          ls -la "$RELEASE_DIR"
 
       - name: Upload Release APK Artifact
         uses: actions/upload-artifact@v7
         with:
           name: M328V6Host-release-apk
-          path: |
-            android/app/build/outputs/apk/release/*.apk
-            android/app/build/outputs/apk/release/output-metadata.json
+          path: android/app/build/outputs/apk/release/M328V6Host-v*-release.apk
           if-no-files-found: error
           retention-days: 30
 
@@ -147,8 +153,8 @@ jobs:
           TAG_INPUT: ${{ inputs.release_tag }}
           NOTES_INPUT: ${{ inputs.release_notes }}
           RUN_NUMBER: ${{ github.run_number }}
+          VERSION_NAME: ${{ env.VERSION_NAME }}
         run: |
-          VERSION_NAME=$(jq -r '.elements[0].versionName // empty' android/app/build/outputs/apk/release/output-metadata.json 2>/dev/null || true)
           TAG="$TAG_INPUT"
           if [ -z "$TAG" ]; then
             if [ -n "$VERSION_NAME" ]; then
@@ -163,6 +169,6 @@ jobs:
           fi
           echo "Publishing release with tag: $TAG"
           gh release create "$TAG" \
-            android/app/build/outputs/apk/release/M328V6Host-release.apk \
+            "android/app/build/outputs/apk/release/M328V6Host-v${VERSION_NAME}-release.apk" \
             --title "Release $TAG" \
             --notes "$NOTES"
